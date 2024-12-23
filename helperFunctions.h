@@ -279,15 +279,15 @@ void drawMenu3() // SUMMARY
     char tempStr[16];
     if (i == 0)
     {
-      snprintf(tempStr, sizeof(tempStr), "0:%dC|%d%%", sensorTemp[0], sensorHum[0]);
+      snprintf(tempStr, sizeof(tempStr), "Pel:%dC%d%%", sensorTemp[0], sensorHum[0]);
     }
     else if (i == 1)
     {
-      snprintf(tempStr, sizeof(tempStr), "1:%dC|%d%%", sensorTemp[1], sensorHum[1]);
+      snprintf(tempStr, sizeof(tempStr), "Sol:%dC%d%%", sensorTemp[3], sensorHum[3]);
     }
     else if (i == 2)
     {
-      snprintf(tempStr, sizeof(tempStr), "2:%dC|%d%%", sensorTemp[2], sensorHum[2]);
+      snprintf(tempStr, sizeof(tempStr), "Box:%dC%d%%", sensorTemp[6], sensorHum[6]);
     }
     else if (i == 3)
     {
@@ -295,15 +295,15 @@ void drawMenu3() // SUMMARY
     }
     else if (i == 4)
     {
-      snprintf(tempStr, sizeof(tempStr), "Fan0:%d%%", fanSpeedPercent[0]);
+      snprintf(tempStr, sizeof(tempStr), "FPel:%d%%", fanSpeedPercent[0]);
     }
     else if (i == 5)
     {
-      snprintf(tempStr, sizeof(tempStr), "Fan1:%d%%", fanSpeedPercent[1]);
+      snprintf(tempStr, sizeof(tempStr), "FSol:%d%%", fanSpeedPercent[3]);
     }
     else if (i == 6)
     {
-      snprintf(tempStr, sizeof(tempStr), "Fan2:%d%%", fanSpeedPercent[2]);
+      snprintf(tempStr, sizeof(tempStr), "FBox:%d%%", fanSpeedPercent[6]);
     }
     else if (i == 7)
     {

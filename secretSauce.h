@@ -62,15 +62,55 @@ https://ideavox.org/system/files/2024-12/A037-Rapport-Sechoir-solaire-hybride.pd
 
 void secretSauce()
 {
-  peltiersPower = 255;
 
-  fanSpeed[0] = globalFanSpeed;
+  // ################## DEBUG ##################
+  //  ########### THIS IS A VERY SIMPLE BANG-BANG LOGIC TO DEBUG HARDWARE ###########
+
+  // 0 PELTIERS
+  // 3 SOLAR BODY
+  // 6 DRY BOX (OUT)
+
+  // if hotter than expected, turn on cold air intake
+  if (sensorTemp[6] > DEBUG_TARGET_TEMP + DEBUG_TARGET_OFFSET)
+  {
+    fanSpeed[0] = 255;  // cold air intake at full speed
+    fanSpeed[3] = 0;    // hot air intake off
+    fanSpeed[6] = 255;  // outlet fan at full speed
+    valveStatus[3] = 0; // close sun body inlet valve
+  }
+  // if colder than expected, turn on hot air intake
+  else if (sensorTemp[6] < DEBUG_TARGET_TEMP - DEBUG_TARGET_OFFSET)
+  {
+    fanSpeed[0] = 0;    // cold air intake off
+    fanSpeed[3] = 255;  // hot air intake af full speed
+    fanSpeed[6] = 255;  // outlet fan at full speed
+    valveStatus[3] = 1; // open sun body inlet valve
+  }
+  // if within range, turn off all fans
+  else
+  {
+    fanSpeed[0] = 0; // cold air intake off
+    fanSpeed[3] = 0; // hot air intake off
+    fanSpeed[6] = 0; // outlet fan off
+  }
+
+  // if more humid than expected, turn on peltiers
+  if (sensorHum[6] > DEBUG_TARGET_HUM + DEBUG_TARGET_OFFSET)
+  {
+    peltiersPower = 255;
+  }
+  // if less humid than expected, turn off peltiers
+  else if (sensorHum[6] < DEBUG_TARGET_HUM - DEBUG_TARGET_OFFSET)
+  {
+    peltiersPower = 0;
+  }
+
+  // control all other fans using potentiomenter
+  // fanSpeed[0] = globalFanSpeed;
   fanSpeed[1] = globalFanSpeed;
   fanSpeed[2] = globalFanSpeed;
-  fanSpeed[3] = globalFanSpeed;
+  // fanSpeed[3] = globalFanSpeed;
   fanSpeed[4] = globalFanSpeed;
   fanSpeed[5] = globalFanSpeed;
-  fanSpeed[6] = globalFanSpeed;
-
-  valveStatus[6] = 1;
+  // fanSpeed[6] = globalFanSpeed;
 }
