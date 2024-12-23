@@ -21,6 +21,10 @@ for more information
 - 12V PC Fans
 - 4x 100W Generic Solar Panels, controller modules and batteries
 
+## References
+
+https://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
+
 ## License
 
 Open Business Foundation © 2024  

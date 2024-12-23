@@ -32,9 +32,15 @@ const int encoderButtonPin = 35;
 // Buzzer pin (commonly 37 on RAMPS with full graphic controller)
 const int buzzerPin = 37;
 
+// Pin configuration
+const int SD_CS_PIN = 53; // Change to 10 for Arduino UNO or 53 for MEGA
+File logFile;             // File object for SD card
+
+#define REGISTER_INTERVAL_MINUTES 1 // Interval in minutes to register data
+
 bool sensorStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 int sensorTemp[7] = {0, 0, 0, 0, 0, 0, 0};
-unsigned int sensorHum[7] = {0, 0, 0, 0, 0, 0, 0};
+int sensorHum[7] = {0, 0, 0, 0, 0, 0, 0};
 
 unsigned int fanSpeed[7] = {0, 0, 0, 0, 0, 0, 0};
 unsigned int fanSpeedPercent[7] = {0, 0, 0, 0, 0, 0, 0};
@@ -43,6 +49,7 @@ bool valveStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 
 volatile unsigned long timeSeconds = 0;
 volatile unsigned long timeMinutes = 0;
+volatile unsigned long lastTimeRegistered = -1;
 
 unsigned int peltiersPower = 0;
 unsigned int peltiersPowerPercent = 0;

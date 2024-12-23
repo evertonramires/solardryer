@@ -379,3 +379,29 @@ ISR(TIMER1_COMPA_vect)
     timeSeconds = 0; // Reset the second counter
   }
 }
+
+void sanitizeSensors()
+{
+  const int minValue = -200;
+  // const int maxValue = 256;
+
+  for (int i = 0; i < 7; ++i)
+  {
+    if (sensorTemp[i] < minValue)
+    {
+      sensorTemp[i] = 0;
+    }
+    // else if (sensorTemp[i] > maxValue)
+    // {
+    //   sensorTemp[i] = maxValue;
+    // }
+    if (sensorHum[i] < minValue)
+    {
+      sensorHum[i] = 0;
+    }
+    // else if (sensorHum[i] > maxValue)
+    // {
+    //   sensorHum[i] = maxValue;
+    // }
+  }
+}

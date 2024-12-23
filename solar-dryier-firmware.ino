@@ -2,6 +2,8 @@
 #include <AM2302-Sensor.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <SPI.h>
+#include <SD.h>
 #include "config.h"
 #include "helperFunctions.h"
 #include "secretSauce.h"
@@ -46,6 +48,48 @@ void setup()
     u8g.setPrintPos(0, lineHeight);
     u8g.print("Starting...");
   } while (u8g.nextPage());
+
+  // Initialize SD card
+  if (!SD.begin(SD_CS_PIN))
+  {
+    Serial.println("Card failed, or not present.");
+    u8g.firstPage();
+    do
+    {
+      u8g.setFont(font);
+      u8g.setPrintPos(0, lineHeight);
+      u8g.print("Card failed, or not present.");
+    } while (u8g.nextPage());
+    // while (1);
+  }
+
+  do
+  {
+    u8g.setFont(font);
+    u8g.setPrintPos(0, lineHeight);
+    u8g.print("Card initialized successfully. :)");
+  } while (u8g.nextPage());
+  Serial.println("Card initialized successfully.");
+
+  // REMEMBER THE SD CARD IS WIPED OUT EVERYTIME SYSTEM STARTS
+
+  // Wipe the file before opening it
+  if (SD.exists("log.csv"))
+  {
+    SD.remove("log.csv");
+  }
+  logFile = SD.open("log.csv", FILE_WRITE);
+  delay(100);
+  if (logFile)
+  {
+    // print the header columns to csv
+    logFile.println("Time(min),T0(ºC),H0(%),T1(ºC),H1(%),T2(ºC),H2(%),T3(ºC),H3(%),T4(ºC),H4(%),T5(ºC),H5(%),T6(ºC),H6(%),Fan0(%),Fan1(%),Fan2(%),Fan3(%),Fan4(%),Fan5(%),Fan6(%),Valve0,Valve1,Valve2,Valve3,Valve4,Valve5,Valve6,Peltiers(%)");
+    logFile.close();
+  }
+  else
+  {
+    Serial.println("Failed to open log file for writing.");
+  }
 
   Serial.println(F("### DHT22 Sensor Tester ###"));
   Serial.println(F("###   See: ideavox.org  ###"));
@@ -268,6 +312,74 @@ void loop()
   sensorHum[5] = sensor5.get_Humidity();
   sensorHum[6] = sensor6.get_Humidity();
 
+  sanitizeSensors();
+
+  if (timeMinutes % REGISTER_INTERVAL_MINUTES == 0 && timeMinutes != lastTimeRegistered)
+  {
+    //           ("T0,H0,T1,H1,T2,H2,T3,H3,T4,H4,T5,H5,T6,H6,F0,F1,F2,F3,F4,F5,F6,V0,V1,V2,V3,V4,V5,V6,P");
+    logFile = SD.open("log.csv", FILE_WRITE);
+    logFile.print(timeMinutes);
+    logFile.print(",");
+    logFile.print(sensorTemp[0]);
+    logFile.print(",");
+    logFile.print(sensorHum[0]);
+    logFile.print(",");
+    logFile.print(sensorTemp[1]);
+    logFile.print(",");
+    logFile.print(sensorHum[1]);
+    logFile.print(",");
+    logFile.print(sensorTemp[2]);
+    logFile.print(",");
+    logFile.print(sensorHum[2]);
+    logFile.print(",");
+    logFile.print(sensorTemp[3]);
+    logFile.print(",");
+    logFile.print(sensorHum[3]);
+    logFile.print(",");
+    logFile.print(sensorTemp[4]);
+    logFile.print(",");
+    logFile.print(sensorHum[4]);
+    logFile.print(",");
+    logFile.print(sensorTemp[5]);
+    logFile.print(",");
+    logFile.print(sensorHum[5]);
+    logFile.print(",");
+    logFile.print(sensorTemp[6]);
+    logFile.print(",");
+    logFile.print(sensorHum[6]);
+    logFile.print(",");
+    logFile.print(fanSpeedPercent[0]);
+    logFile.print(",");
+    logFile.print(fanSpeedPercent[1]);
+    logFile.print(",");
+    logFile.print(fanSpeedPercent[2]);
+    logFile.print(",");
+    logFile.print(fanSpeedPercent[3]);
+    logFile.print(",");
+    logFile.print(fanSpeedPercent[4]);
+    logFile.print(",");
+    logFile.print(fanSpeedPercent[5]);
+    logFile.print(",");
+    logFile.print(fanSpeedPercent[6]);
+    logFile.print(",");
+    logFile.print(valveStatus[0]);
+    logFile.print(",");
+    logFile.print(valveStatus[1]);
+    logFile.print(",");
+    logFile.print(valveStatus[2]);
+    logFile.print(",");
+    logFile.print(valveStatus[3]);
+    logFile.print(",");
+    logFile.print(valveStatus[4]);
+    logFile.print(",");
+    logFile.print(valveStatus[5]);
+    logFile.print(",");
+    logFile.print(valveStatus[6]);
+    logFile.print(",");
+    logFile.println(peltiersPowerPercent);
+    logFile.close();
+    lastTimeRegistered = timeMinutes;
+  }
   // ########### CALL MAIN LOGIC BIG FORMULA FUNCTION ###########
   secretSauce();
   // ###########################################################
