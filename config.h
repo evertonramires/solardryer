@@ -42,6 +42,8 @@ bool sensorStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 int sensorTemp[7] = {0, 0, 0, 0, 0, 0, 0};
 int sensorHum[7] = {0, 0, 0, 0, 0, 0, 0};
 
+bool sdPresent = false;
+int globalFanSpeed = 0;
 unsigned int fanSpeed[7] = {0, 0, 0, 0, 0, 0, 0};
 unsigned int fanSpeedPercent[7] = {0, 0, 0, 0, 0, 0, 0};
 

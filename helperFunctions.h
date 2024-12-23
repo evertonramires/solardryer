@@ -309,7 +309,17 @@ void drawMenu3() // SUMMARY
     {
       snprintf(tempStr, sizeof(tempStr), "%d min", timeMinutes);
     }
+
     u8g.print(tempStr);
+    u8g.setPrintPos(0, 64);
+    if (sdPresent == true)
+    {
+      u8g.print(".");
+    }
+    else
+    {
+      u8g.print("SD NOT PRESENT");
+    }
   }
 }
 

@@ -16,9 +16,6 @@ AM2302::AM2302_Sensor sensor4{SENSOR4_PIN};
 AM2302::AM2302_Sensor sensor5{SENSOR5_PIN};
 AM2302::AM2302_Sensor sensor6{SENSOR6_PIN};
 
-/*****************************************************
- * SETUP
- *****************************************************/
 void setup()
 {
 
@@ -53,23 +50,32 @@ void setup()
   if (!SD.begin(SD_CS_PIN))
   {
     Serial.println("Card failed, or not present.");
+    sdPresent = false;
+
     u8g.firstPage();
     do
     {
       u8g.setFont(font);
       u8g.setPrintPos(0, lineHeight);
       u8g.print("Card failed, or not present.");
+      sdPresent = false;
+
     } while (u8g.nextPage());
     // while (1);
+    sdPresent = false;
   }
-
-  do
+  else
   {
-    u8g.setFont(font);
-    u8g.setPrintPos(0, lineHeight);
-    u8g.print("Card initialized successfully. :)");
-  } while (u8g.nextPage());
-  Serial.println("Card initialized successfully.");
+    do
+    {
+      u8g.setFont(font);
+      u8g.setPrintPos(0, lineHeight);
+      u8g.print("Card initialized successfully. :)");
+      sdPresent = true;
+    } while (u8g.nextPage());
+    Serial.println("Card initialized successfully.");
+    sdPresent = true;
+  }
 
   // REMEMBER THE SD CARD IS WIPED OUT EVERYTIME SYSTEM STARTS
 
@@ -211,19 +217,29 @@ void loop()
     bool moved = false;
     while (diff > 0)
     {
-      if (currentSelection < menuLength - 1)
+      // use encoder to change menu
+      // if (currentSelection < menuLength - 1)
+      // {
+      //   currentSelection++;
+      //   moved = true;
+      // }
+
+      // use encoder to change fans speed
+      if (globalFanSpeed <= 255)
       {
-        currentSelection++;
+        globalFanSpeed += 10;
         moved = true;
+        // beep();
       }
       diff -= STEPS_PER_ITEM;
     }
     while (diff < 0)
     {
-      if (currentSelection > 0)
+      if (globalFanSpeed > 0)
       {
-        currentSelection--;
+        globalFanSpeed -= 10;
         moved = true;
+        // beep();
       }
       diff += STEPS_PER_ITEM;
     }
@@ -231,6 +247,15 @@ void loop()
     if (moved)
     {
       lastMoveTime = millis();
+    }
+
+    if (globalFanSpeed > 255)
+    {
+      globalFanSpeed = 255;
+    }
+    else if (globalFanSpeed < 0)
+    {
+      globalFanSpeed = 0;
     }
   }
 
@@ -313,6 +338,17 @@ void loop()
   sensorHum[6] = sensor6.get_Humidity();
 
   sanitizeSensors();
+
+  // Check if SD card is present
+  if (!SD.begin(SD_CS_PIN))
+  {
+    Serial.println("SD card not present.");
+    sdPresent = false;
+  }
+  else
+  {
+    sdPresent = true;
+  }
 
   if (timeMinutes % REGISTER_INTERVAL_MINUTES == 0 && timeMinutes != lastTimeRegistered)
   {

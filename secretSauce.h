@@ -64,13 +64,13 @@ void secretSauce()
 {
   peltiersPower = 255;
 
-  fanSpeed[0] = 0;
-  fanSpeed[1] = 25;
-  fanSpeed[2] = 55;
-  fanSpeed[3] = 100;
-  fanSpeed[4] = 155;
-  fanSpeed[5] = 200;
-  fanSpeed[6] = 255;
+  fanSpeed[0] = globalFanSpeed;
+  fanSpeed[1] = globalFanSpeed;
+  fanSpeed[2] = globalFanSpeed;
+  fanSpeed[3] = globalFanSpeed;
+  fanSpeed[4] = globalFanSpeed;
+  fanSpeed[5] = globalFanSpeed;
+  fanSpeed[6] = globalFanSpeed;
 
   valveStatus[6] = 1;
 }
