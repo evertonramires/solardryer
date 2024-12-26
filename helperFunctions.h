@@ -41,6 +41,10 @@ void handleEncoderButton()
       }
       else if (currentMenu == 3)
       {
+        currentMenu = 4;
+      }
+      else if (currentMenu == 4)
+      {
         currentMenu = 0;
       }
 
@@ -273,13 +277,11 @@ void drawMenu3() // SUMMARY
     char tempStr[16];
     if (i == 0)
     {
-      snprintf(tempStr, sizeof(tempStr), "Pel:%dC%d%%", sensorTemp[0], sensorHum[0]);
+      snprintf(tempStr, sizeof(tempStr), "Ext:%dC%d%%", sensorTemp[0], sensorHum[0]);
     }
     else if (i == 1)
     {
-      // snprintf(tempStr, sizeof(tempStr), "Sol:%dC%d%%", sensorTemp[3], sensorHum[3]);
-      int dewPointDecimals = (int)(dewPoint * 100) % 100;
-      snprintf(tempStr, sizeof(tempStr), "Dew:%d.%dC", (int)dewPoint, (short)dewPointDecimals);
+      snprintf(tempStr, sizeof(tempStr), "Sol:%dC%d%%", sensorTemp[3], sensorHum[3]);
     }
     else if (i == 2)
     {
@@ -300,6 +302,85 @@ void drawMenu3() // SUMMARY
     else if (i == 6)
     {
       snprintf(tempStr, sizeof(tempStr), "FBox:%d%%", fanSpeedPercent[6]);
+    }
+    else if (i == 7)
+    {
+      snprintf(tempStr, sizeof(tempStr), "%d min", timeMinutes);
+    }
+
+    u8g.print(tempStr);
+    u8g.setPrintPos(0, 64);
+    if (sdPresent == true)
+    {
+      u8g.print(".");
+    }
+    else
+    {
+      u8g.print("SD NOT PRESENT");
+    }
+  }
+}
+void drawMenu4() // SUMMARY
+{
+  u8g.setFont(font);
+
+  // We have 8 items, split into 2 columns, 4 items per column.
+  // item i:
+  // row = i % 4
+  // col = i / 4  (0 or 1)
+  for (int i = 0; i < menuLength + 1; i++)
+  {
+    int col = i / 4; // 0 for items 0-3, 1 for items 4-7
+    int row = i % 4;
+    int y = (row + 1) * lineHeight; // line position
+    int x = columnX[col];           // column start
+
+    if (i == currentSelection)
+    {
+      // Draw ">" marker
+      u8g.setPrintPos(x, y);
+      u8g.print("> ");
+      u8g.setPrintPos(x + textIndent, y);
+    }
+    else
+    {
+      u8g.setPrintPos(x + textIndent, y);
+    }
+    // Show speed for each fan
+    char tempStr[16];
+    if (i == 0)
+    {
+      snprintf(tempStr, sizeof(tempStr), "Ext:%dC%d%%", sensorTemp[0], sensorHum[0]);
+    }
+    else if (i == 1)
+    {
+      snprintf(tempStr, sizeof(tempStr), "Box:%dC%d%%", sensorTemp[6], sensorHum[6]);
+    }
+    else if (i == 2)
+    {
+      // snprintf(tempStr, sizeof(tempStr), "Sol:%dC%d%%", sensorTemp[3], sensorHum[3]);
+      int dewPointDecimals = (int)(dewPoint * 100) % 100;
+      snprintf(tempStr, sizeof(tempStr), "Dew:%d.%02dC", (int)dewPoint, (short)dewPointDecimals);
+    }
+    else if (i == 3)
+    {
+      int tempDifferenceDecimals = (int)(tempDifference * 100) % 100;
+      snprintf(tempStr, sizeof(tempStr), "Dif:%d.%02dC", (int)tempDifference, (short)tempDifferenceDecimals);
+    }
+    else if (i == 4)
+    {
+      int coolingEnergyDecimals = (int)(coolingEnergy * 100) % 100;
+      snprintf(tempStr, sizeof(tempStr), "%d.%02dWh/m3", (int)coolingEnergy, (short)coolingEnergyDecimals);
+    }
+    else if (i == 5)
+    {
+      int CpDecimals = (int)(Cp * 100) % 100;
+      snprintf(tempStr, sizeof(tempStr), "Cp:%d.%02d", (int)Cp, CpDecimals);
+    }
+    else if (i == 6)
+    {
+      int airDensityDecimals = (int)(airDensity * 100) % 100;
+      snprintf(tempStr, sizeof(tempStr), "airD:%d.%02d", (int)airDensity, airDensityDecimals);
     }
     else if (i == 7)
     {

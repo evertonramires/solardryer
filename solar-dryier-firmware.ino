@@ -307,6 +307,11 @@ void loop()
       // drawSelectionScreen();
       drawMenu3();
     }
+    else if (currentMenu == 4)
+    {
+      // drawSelectionScreen();
+      drawMenu4();
+    }
 
   } while (u8g.nextPage());
 

@@ -61,6 +61,71 @@ Details:
 https://ideavox.org/system/files/2024-12/A037-Rapport-Sechoir-solaire-hybride.pdf
 */
 
+// Function to calculate the specific heat capacity (Cp) based on temperature and humidity
+float calculateCp(float temp, float humidity)
+{
+  // Saturation pressure of water vapor at the given temperature (hPa)
+  float es = 6.112 * exp(17.67 * temp / (temp + 243.5));
+
+  // Actual vapor pressure
+  float e = (humidity / 100.0) * es;
+
+  // Humidity ratio (kg water / kg dry air)
+  float W = 0.622 * e / (1013 - e);
+
+  // Cp of humid air
+  return CpDry + W * (CpVapor - CpDry);
+}
+
+// Function to calculate the dew point temperature
+float calculateDewPoint(float temp, float humidity)
+{
+  const float a = 17.27;
+  const float b = 237.7;
+  float alpha = (a * temp) / (b + temp) + log(humidity / 100.0);
+  return (b * alpha) / (a - alpha);
+}
+
+// Calculate the cooling energy using Cp, temperature difference, and air density
+float calculateCoolingEnergy(float temp, float dewPoint, float Cp, float airDensity)
+{
+  tempDifference = temp - dewPoint;                     // Temperature difference (°C)
+  float energyPerM3 = Cp * tempDifference * airDensity; // Energy in kJ/m^3
+  return energyPerM3 * 1000.0 / 3600.0;                 // Convert kJ to Wh/m^3
+}
+
+// Main function to handle calculations
+void calculate(float temp, float humidity)
+{
+  if (humidity < 0 || humidity > 100)
+  {
+    Serial.println("Please enter valid values for temperature and humidity.");
+    return;
+  }
+
+  dewPoint = calculateDewPoint(temp, humidity);                           // Dew point temperature
+  tempDifference = temp - dewPoint;                                       // Temperature difference
+  Cp = calculateCp(temp, humidity);                                       // Specific heat capacity
+  coolingEnergy = calculateCoolingEnergy(temp, dewPoint, Cp, airDensity); // Cooling energy in Wh/m^3
+
+  // Print results
+  // Serial.print("Temperature: ");
+  // Serial.println(temp);
+  // Serial.print("Humidity: ");
+  // Serial.println(humidity);
+  Serial.println("--------------------");
+  Serial.print("Dew Point: ");
+  Serial.println(dewPoint);
+  Serial.print("Temperature Difference: ");
+  Serial.println(tempDifference);
+  Serial.print("Specific Heat Capacity (Cp): ");
+  Serial.println(Cp);
+  Serial.print("Air Density: ");
+  Serial.println(airDensity);
+  Serial.print("Cooling Energy (Wh/m^3): ");
+  Serial.println(coolingEnergy);
+}
+
 void secretSauce()
 {
   // control all other fans using potentiomenter
@@ -80,17 +145,19 @@ void secretSauce()
   // dewPoint = 243.04 * (log(sensorHum[0] / 100) + (17.625 * sensorTemp[0]) / (243.04 + sensorTemp[0])) / (17.625 - log(sensorHum[0] / 100) - (17.625 * sensorTemp[0]) / (243.04 + sensorTemp[0]));
   // Serial.println(dewPoint);
 
-  const float a = 17.27;
-  const float b = 237.7;
+  // const float a = 17.27;
+  // const float b = 237.7;
 
-  float T = sensorTemp[0]; // Température en °C
-  float RH = sensorHum[0]; // Humidité relative en %
+  // float T = sensorTemp[0]; // Température en °C
+  // float RH = sensorHum[0]; // Humidité relative en %
 
-  float alpha = (a * T) / (b + T) + log(RH / 100.0);
-  float Td = (b * alpha) / (a - alpha);
+  // float alpha = (a * T) / (b + T) + log(RH / 100.0);
+  // float Td = (b * alpha) / (a - alpha);
 
-  dewPoint = Td;
-  Serial.println(dewPoint);
+  // dewPoint = Td;
+  // // Serial.println(dewPoint);
+
+  calculate(sensorTemp[0], sensorHum[0]);
 
   // ################## DEBUG ##################
   //  ########### THIS IS A VERY SIMPLE BANG-BANG LOGIC TO DEBUG HARDWARE ###########

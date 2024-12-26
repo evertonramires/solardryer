@@ -2,9 +2,16 @@
 #define DEBUG_TARGET_HUM 10
 #define DEBUG_TARGET_OFFSET 1
 #define REGISTER_INTERVAL_MINUTES 1 // Interval in minutes to register data
-#define
+
+const float Lv = 2501;      // Latent heat of vaporization of water (kJ/kg)
+const float CpDry = 1.006;  // Cp of dry air (kJ/kg·K)
+const float CpVapor = 1.92; // Cp of water vapor (kJ/kg·K)
 
 float dewPoint = 0;
+float tempDifference = 0;
+float Cp = 0;
+float airDensity = 1.2;
+float coolingEnergy = 0;
 
 constexpr unsigned int SENSOR0_PIN{11}; // Pin for the first sensor
 constexpr unsigned int SENSOR1_PIN{4};  // Pin for the second sensor
