@@ -278,7 +278,7 @@ void drawMenu3() // SUMMARY
     else if (i == 1)
     {
       // snprintf(tempStr, sizeof(tempStr), "Sol:%dC%d%%", sensorTemp[3], sensorHum[3]);
-      int dewPointDecimals = dewPoint * 100;
+      int dewPointDecimals = (int)(dewPoint * 100) % 100;
       snprintf(tempStr, sizeof(tempStr), "Dew:%d.%dC", (int)dewPoint, (short)dewPointDecimals);
     }
     else if (i == 2)

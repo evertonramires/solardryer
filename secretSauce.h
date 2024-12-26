@@ -90,7 +90,7 @@ void secretSauce()
   float Td = (b * alpha) / (a - alpha);
 
   dewPoint = Td;
-  // Serial.println(dewPoint);
+  Serial.println(dewPoint);
 
   // ################## DEBUG ##################
   //  ########### THIS IS A VERY SIMPLE BANG-BANG LOGIC TO DEBUG HARDWARE ###########
