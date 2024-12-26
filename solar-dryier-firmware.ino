@@ -89,7 +89,7 @@ void setup()
   if (logFile)
   {
     // print the header columns to csv
-    logFile.println("Time(min),T0(ºC),H0(%),T1(ºC),H1(%),T2(ºC),H2(%),T3(ºC),H3(%),T4(ºC),H4(%),T5(ºC),H5(%),T6(ºC),H6(%),Fan0(%),Fan1(%),Fan2(%),Fan3(%),Fan4(%),Fan5(%),Fan6(%),Valve0,Valve1,Valve2,Valve3,Valve4,Valve5,Valve6,Peltiers(%)");
+    logFile.println("Time(min),T0(ºC),H0(%),T1(ºC),H1(%),T2(ºC),H2(%),T3(ºC),H3(%),T4(ºC),H4(%),T5(ºC),H5(%),T6(ºC),H6(%),Fan0(%),Fan1(%),Fan2(%),Fan3(%),Fan4(%),Fan5(%),Fan6(%),Valve0,Valve1,Valve2,Valve3,Valve4,Valve5,Valve6,Peltiers(%),DewPoint(ºC)");
     logFile.close();
   }
   else
@@ -412,7 +412,11 @@ void loop()
     logFile.print(",");
     logFile.print(valveStatus[6]);
     logFile.print(",");
-    logFile.println(peltiersPowerPercent);
+    logFile.print(peltiersPowerPercent);
+    logFile.print(",");
+    logFile.print(dewPoint);
+
+    logFile.println();
     logFile.close();
     lastTimeRegistered = timeMinutes;
   }
@@ -431,53 +435,53 @@ void loop()
 
   peltiersPowerPercent = map(peltiersPower, 0, 255, 0, 100);
 
-  Serial.println("\n#####################################################################\n");
+  // Serial.println("\n#####################################################################\n");
 
-  Serial.println("Sensors Status: ");
-  Serial.print("0 | 1 | 2 | 3 | 4 | 5 | 6 \n");
-  Serial.println("---------------------------");
+  // Serial.println("Sensors Status: ");
+  // Serial.print("0 | 1 | 2 | 3 | 4 | 5 | 6 \n");
+  // Serial.println("---------------------------");
 
-  Serial.print(sensorStatus[0]);
-  Serial.print(" | ");
-  Serial.print(sensorStatus[1]);
-  Serial.print(" | ");
-  Serial.print(sensorStatus[2]);
-  Serial.print(" | ");
-  Serial.print(sensorStatus[3]);
-  Serial.print(" | ");
-  Serial.print(sensorStatus[4]);
-  Serial.print(" | ");
-  Serial.print(sensorStatus[5]);
-  Serial.print(" | ");
-  Serial.print(sensorStatus[6]);
-  Serial.println();
-  Serial.println();
+  // Serial.print(sensorStatus[0]);
+  // Serial.print(" | ");
+  // Serial.print(sensorStatus[1]);
+  // Serial.print(" | ");
+  // Serial.print(sensorStatus[2]);
+  // Serial.print(" | ");
+  // Serial.print(sensorStatus[3]);
+  // Serial.print(" | ");
+  // Serial.print(sensorStatus[4]);
+  // Serial.print(" | ");
+  // Serial.print(sensorStatus[5]);
+  // Serial.print(" | ");
+  // Serial.print(sensorStatus[6]);
+  // Serial.println();
+  // Serial.println();
 
-  for (int i = 0; i < 7; ++i)
-  {
-    if (sensorStatus[i])
-    {
-      Serial.print("Sensor ");
-      Serial.print(i);
-      Serial.print(" (Before Peltiers): ");
-      Serial.print("Temperature: ");
-      Serial.print(i == 0 ? sensor0.get_Temperature() : i == 1 ? sensor1.get_Temperature()
-                                                    : i == 2   ? sensor2.get_Temperature()
-                                                    : i == 3   ? sensor3.get_Temperature()
-                                                    : i == 4   ? sensor4.get_Temperature()
-                                                    : i == 5   ? sensor5.get_Temperature()
-                                                               : sensor6.get_Temperature());
-      Serial.print("ºC");
-      Serial.print(" | Humidity: ");
-      Serial.print(i == 0 ? sensor0.get_Humidity() : i == 1 ? sensor1.get_Humidity()
-                                                 : i == 2   ? sensor2.get_Humidity()
-                                                 : i == 3   ? sensor3.get_Humidity()
-                                                 : i == 4   ? sensor4.get_Humidity()
-                                                 : i == 5   ? sensor5.get_Humidity()
-                                                            : sensor6.get_Humidity());
-      Serial.print("%");
-      Serial.println();
-    }
-  }
+  // for (int i = 0; i < 7; ++i)
+  // {
+  //   if (sensorStatus[i])
+  //   {
+  //     Serial.print("Sensor ");
+  //     Serial.print(i);
+  //     Serial.print(" (Before Peltiers): ");
+  //     Serial.print("Temperature: ");
+  //     Serial.print(i == 0 ? sensor0.get_Temperature() : i == 1 ? sensor1.get_Temperature()
+  //                                                   : i == 2   ? sensor2.get_Temperature()
+  //                                                   : i == 3   ? sensor3.get_Temperature()
+  //                                                   : i == 4   ? sensor4.get_Temperature()
+  //                                                   : i == 5   ? sensor5.get_Temperature()
+  //                                                              : sensor6.get_Temperature());
+  //     Serial.print("ºC");
+  //     Serial.print(" | Humidity: ");
+  //     Serial.print(i == 0 ? sensor0.get_Humidity() : i == 1 ? sensor1.get_Humidity()
+  //                                                : i == 2   ? sensor2.get_Humidity()
+  //                                                : i == 3   ? sensor3.get_Humidity()
+  //                                                : i == 4   ? sensor4.get_Humidity()
+  //                                                : i == 5   ? sensor5.get_Humidity()
+  //                                                           : sensor6.get_Humidity());
+  //     Serial.print("%");
+  //     Serial.println();
+  //   }
+  // }
   // delay(3000);
 }

@@ -1,10 +1,17 @@
-constexpr unsigned int SENSOR0_PIN{26}; // Pin for the first sensor
+#define DEBUG_TARGET_TEMP 50
+#define DEBUG_TARGET_HUM 10
+#define DEBUG_TARGET_OFFSET 1
+#define REGISTER_INTERVAL_MINUTES 1 // Interval in minutes to register data
+
+float dewPoint = 0;
+
+constexpr unsigned int SENSOR0_PIN{11}; // Pin for the first sensor
 constexpr unsigned int SENSOR1_PIN{4};  // Pin for the second sensor
 constexpr unsigned int SENSOR2_PIN{5};  // Pin for the third sensor
 constexpr unsigned int SENSOR3_PIN{6};  // Pin for the fourth sensor
 constexpr unsigned int SENSOR4_PIN{24}; // Pin for the fifth sensor
 constexpr unsigned int SENSOR5_PIN{25}; // Pin for the sixth sensor
-constexpr unsigned int SENSOR6_PIN{11}; // Pin for the seventh sensor
+constexpr unsigned int SENSOR6_PIN{26}; // Pin for the seventh sensor
 
 constexpr unsigned int FAN0_PIN{2};  // Pin for the first fan
 constexpr unsigned int FAN1_PIN{3};  // Pin for the second fan
@@ -35,12 +42,6 @@ const int buzzerPin = 37;
 // Pin configuration
 const int SD_CS_PIN = 53; // Change to 10 for Arduino UNO or 53 for MEGA
 File logFile;             // File object for SD card
-
-#define DEBUG_TARGET_TEMP 50
-#define DEBUG_TARGET_HUM 15
-#define DEBUG_TARGET_OFFSET 5
-
-#define REGISTER_INTERVAL_MINUTES 1 // Interval in minutes to register data
 
 bool sensorStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 int sensorTemp[7] = {0, 0, 0, 0, 0, 0, 0};

@@ -1,4 +1,5 @@
 
+#include <math.h>
 // INPUTS: sensorStatus[0~6], sensorTemp[0~6], sensorHum[0~6]
 // OUTPUTS: fanSpeed[0~6] = 0~255, valveStatus[0~6] = 0~1, peltiersPower = 0~255
 
@@ -62,11 +63,40 @@ https://ideavox.org/system/files/2024-12/A037-Rapport-Sechoir-solaire-hybride.pd
 
 void secretSauce()
 {
+  // control all other fans using potentiomenter
+  // fanSpeed[0] = globalFanSpeed;
+  fanSpeed[1] = globalFanSpeed;
+  fanSpeed[2] = globalFanSpeed;
+  // fanSpeed[3] = globalFanSpeed;
+  fanSpeed[4] = globalFanSpeed;
+  fanSpeed[5] = globalFanSpeed;
+  // fanSpeed[6] = globalFanSpeed;
+
+  // Magnus coeffficients
+  // a = 17.625 °C and b = 243.04 °C
+  // Ts = (b × α(T,RH)) / (a - α(T,HR))
+  // α(T,HR) = ln(HR/100) + aT/(b+T)
+
+  // dewPoint = 243.04 * (log(sensorHum[0] / 100) + (17.625 * sensorTemp[0]) / (243.04 + sensorTemp[0])) / (17.625 - log(sensorHum[0] / 100) - (17.625 * sensorTemp[0]) / (243.04 + sensorTemp[0]));
+  // Serial.println(dewPoint);
+
+  const float a = 17.27;
+  const float b = 237.7;
+
+  float T = sensorTemp[0]; // Température en °C
+  float RH = sensorHum[0]; // Humidité relative en %
+
+  float alpha = (a * T) / (b + T) + log(RH / 100.0);
+  float Td = (b * alpha) / (a - alpha);
+
+  dewPoint = Td;
+  // Serial.println(dewPoint);
 
   // ################## DEBUG ##################
   //  ########### THIS IS A VERY SIMPLE BANG-BANG LOGIC TO DEBUG HARDWARE ###########
 
-  // 0 PELTIERS
+  // 0 BEFORE PELTIERS
+  // 1 RIGHT AFTER PELTIERS
   // 3 SOLAR BODY
   // 6 DRY BOX (OUT)
 
@@ -81,10 +111,10 @@ void secretSauce()
   // if colder than expected, turn on hot air intake
   else if (sensorTemp[6] < DEBUG_TARGET_TEMP - DEBUG_TARGET_OFFSET)
   {
+    valveStatus[3] = 1; // open sun body inlet valve
     fanSpeed[0] = 0;    // cold air intake off
     fanSpeed[3] = 255;  // hot air intake af full speed
     fanSpeed[6] = 255;  // outlet fan at full speed
-    valveStatus[3] = 1; // open sun body inlet valve
   }
   // if within range, turn off all fans
   else
@@ -94,23 +124,18 @@ void secretSauce()
     fanSpeed[6] = 0; // outlet fan off
   }
 
-  // if more humid than expected, turn on peltiers
-  if (sensorHum[6] > DEBUG_TARGET_HUM + DEBUG_TARGET_OFFSET)
+  // if more humid than expected and hotter than dewPoint, turn on peltiers
+  if ((sensorHum[1] > DEBUG_TARGET_HUM + DEBUG_TARGET_OFFSET) && sensorTemp[1] > dewPoint)
   {
     peltiersPower = 255;
   }
   // if less humid than expected, turn off peltiers
-  else if (sensorHum[6] < DEBUG_TARGET_HUM - DEBUG_TARGET_OFFSET)
+  else if ((sensorHum[1] < DEBUG_TARGET_HUM - DEBUG_TARGET_OFFSET))
   {
     peltiersPower = 0;
   }
-
-  // control all other fans using potentiomenter
-  // fanSpeed[0] = globalFanSpeed;
-  fanSpeed[1] = globalFanSpeed;
-  fanSpeed[2] = globalFanSpeed;
-  // fanSpeed[3] = globalFanSpeed;
-  fanSpeed[4] = globalFanSpeed;
-  fanSpeed[5] = globalFanSpeed;
-  // fanSpeed[6] = globalFanSpeed;
+  else
+  {
+    peltiersPower = 0;
+  }
 }
