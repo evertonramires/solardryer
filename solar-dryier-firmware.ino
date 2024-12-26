@@ -89,7 +89,7 @@ void setup()
   if (logFile)
   {
     // print the header columns to csv
-    logFile.println("Time(min),T0(ºC),H0(%),T1(ºC),H1(%),T2(ºC),H2(%),T3(ºC),H3(%),T4(ºC),H4(%),T5(ºC),H5(%),T6(ºC),H6(%),Fan0(%),Fan1(%),Fan2(%),Fan3(%),Fan4(%),Fan5(%),Fan6(%),Valve0,Valve1,Valve2,Valve3,Valve4,Valve5,Valve6,Peltiers(%),DewPoint(ºC)");
+    logFile.println("Time(min),T0(ºC),H0(%),T1(ºC),H1(%),T2(ºC),H2(%),T3(ºC),H3(%),T4(ºC),H4(%),T5(ºC),H5(%),T6(ºC),H6(%),Fan0(%),Fan1(%),Fan2(%),Fan3(%),Fan4(%),Fan5(%),Fan6(%),Valve0,Valve1,Valve2,Valve3,Valve4,Valve5,Valve6,Peltiers(%),DewPoint(ºC),Cooling Energy (Wh/m^3),Temp Difference(ºC),Cp,airDensity");
     logFile.close();
   }
   else
@@ -420,6 +420,14 @@ void loop()
     logFile.print(peltiersPowerPercent);
     logFile.print(",");
     logFile.print(dewPoint);
+    logFile.print(",");
+    logFile.print(coolingEnergy);
+    logFile.print(",");
+    logFile.print(tempDifference);
+    logFile.print(",");
+    logFile.print(Cp);
+    logFile.print(",");
+    logFile.print(airDensity);
 
     logFile.println();
     logFile.close();
