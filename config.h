@@ -2,6 +2,7 @@
 #define DEBUG_TARGET_HUM 10
 #define DEBUG_TARGET_OFFSET 1
 #define REGISTER_INTERVAL_MINUTES 1 // Interval in minutes to register data
+#define
 
 float dewPoint = 0;
 

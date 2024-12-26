@@ -125,7 +125,7 @@ void secretSauce()
   }
 
   // if more humid than expected and hotter than dewPoint, turn on peltiers
-  if ((sensorHum[1] > DEBUG_TARGET_HUM + DEBUG_TARGET_OFFSET) && sensorTemp[1] > dewPoint)
+  if ((sensorHum[1] > DEBUG_TARGET_HUM + DEBUG_TARGET_OFFSET) && (sensorTemp[1] > dewPoint) && (dewPoint > 0))
   {
     peltiersPower = 255;
   }
