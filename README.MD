@@ -2,7 +2,7 @@
 
 This is a simple yet functional controller firmware for a hybrid solar dryer based on sun power. The main goal of this project is to be able to use widely available electronics and as simple as possible source code so it can be easily replicated.
 
-[![Support my work ❤️](https://img.shields.io/badge/Support%20my%20work%20❤️-orange?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/c/orobocigano)
+[![Support my work ❤️](https://img.shields.io/badge/Support%20my%20work%20❤️-orange?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/c/evertonics)
 
 ## See
 
